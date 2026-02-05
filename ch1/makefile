@@ -13,5 +13,5 @@ vet: fmt
 .PHONY:vet
 
 build: vet
-	go build hello.go
+	go build capacity.go
 .PHONY:build
