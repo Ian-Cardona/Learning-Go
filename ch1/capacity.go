@@ -4,11 +4,10 @@ import "fmt"
 
 func main() {
 	x := []int{1, 2, 3, 4}
-	y := x[:2]
-
-	fmt.Println(cap(x), cap(y))
-
-	y = append(y, 30)
-	fmt.Println("x:", x)
-	fmt.Println("y:", y)
+	d := [4]int{5, 6, 7, 8}
+	y := make([]int, 2)
+	copy(y, d[:])
+	fmt.Println(y)
+	copy(d[:], x)
+	fmt.Println(d)
 }
