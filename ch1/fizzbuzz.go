@@ -1,21 +1,37 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
+
+type Person struct {
+	FirstName string
+	LastName  string
+	Age       int
+}
 
 func main() {
-	for i := 1; i <= 100; i++ {
-		if i%3 == 0 && i%5 == 0 {
-			fmt.Println("FizzBuzz")
-			continue
-		}
-		if i%3 == 0 {
-			fmt.Println("Fizz")
-			continue
-		}
-		if i%5 == 0 {
-			fmt.Println("Buzz")
-			continue
-		}
-		fmt.Println(i)
+	type Person struct {
+		FirstName string
+		LastName  string
+		Age       int
 	}
+
+	people := []Person{
+		{"Pat", "Patterson", 37},
+		{"Tracy", "Bobbert", 23},
+		{"Fred", "Fredson", 18},
+	}
+	fmt.Println(people)
+
+	sort.Slice(people, func(i int, j int) bool {
+		return people[i].LastName < people[j].LastName
+	})
+	fmt.Println(people)
+
+	sort.Slice(people, func(i, j int) bool {
+		return people[i].Age < people[j].Age
+	})
+	fmt.Println(people)
 }
