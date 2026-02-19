@@ -1,32 +1,50 @@
 package main
 
 import (
-	"io"
-	"strings"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
 )
 
-func countLetter(r io.Reader) (map[string]int, err) {
-	buf := make([]byte, 2048)
-	out := map[string]int{}
-
-	for {
-		n, err := r.Read(buf)
-		for _, b := range buf[:n] {
-			if (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z') {
-				out[string(b)]++
-			}
-		}
-		if err == io.EOF {
-			return out, nil
-		}
-		if err != nil {
-			return nil, err
-		}
-	}
+type Person struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
 }
 
 func main() {
-	s := "The quick brown fox jumped over the lazy dog"
-	sr := strings.NewReader(s)
-	counts, err := countLetter(s)
-	if err != 
+	toFile := Person{
+		Name: "Fred",
+		Age:  40,
+	}
+
+	tmpFile, err := ioutil.TempFile(os.TempDir(), "sample-")
+	if err != nil {
+		panic(err)
+	}
+	defer os.Remove(tmpFile.Name())
+
+	err = json.NewEncoder(tmpFile).Encode(toFile)
+	if err != nil {
+		panic(err)
+	}
+	err = tmpFile.Close()
+	if err != nil {
+		panic(err)
+	}
+
+	tmpFile2, err := os.Open(tmpFile.Name())
+	if err != nil {
+		panic(err)
+	}
+	var fromFile Person
+	err = json.NewDecoder(tmpFile2).Decode(&fromFile)
+	if err != nil {
+		panic(err)
+	}
+	err = tmpFile2.Close()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%+v\n", fromFile)
+}
